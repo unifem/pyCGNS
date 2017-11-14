@@ -70,6 +70,14 @@ doc2 = """
 
 """
 
+def str2bool(v):
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 pr = argparse.ArgumentParser(description=doc1, epilog=doc2,
                              formatter_class=argparse.RawDescriptionHelpFormatter,
                              usage='python %(prog)s [options] file1 file2 ...')
@@ -83,19 +91,33 @@ pr.add_argument("-U", "--update", action='store_true',
 pr.add_argument("-g", "--generate", action='store_true',
                 help='force Qt/creator .pyx files to be regenerated')
 
+modules = {"app":True, "map":True, "wra":False, "pat":True, "val":True, 
+           "dat":True, "nav":True}
+
+for name, val in modules.items():
+    pr.add_argument("--" + name, type=str2bool, default=val,
+                    help='enable/disable building of CGNS.' + name.upper())
+
+# Remove modules from command-line arguments
+pr1 = argparse.ArgumentParser()
+for name in modules:
+    pr1.add_argument("--" + name, type=str2bool)
+
+args1, unknown = pr1.parse_known_args()
+sys.argv = sys.argv[:1] + unknown
+
 try:
     os.makedirs('./build/lib/CGNS')
 except OSError:
     pass
 
-APP = True
-MAP = True
-WRA = False
-MAP = True
-PAT = True
-VAL = True
-DAT = True
-NAV = True
+APP = args1.app
+MAP = args1.map
+WRA = args1.wra
+PAT = args1.pat
+VAL = args1.val
+DAT = args1.dat
+NAV = args1.nav
 
 ALL_PACKAGES = []
 ALL_SCRIPTS = []
