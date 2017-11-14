@@ -406,10 +406,10 @@ def frompath_HDF5():
 # --------------------------------------------------------------------
 def frompath_MLL():
     try:
-        mllp = subprocess.check_output(["which", "cgnscheck"], stderr=subprocess.STDOUT)
+        mllp = subprocess.check_output(["which", "cgnscheck"], stderr=subprocess.STDOUT).decode('utf-8')
     except:
         try:
-            mllp = subprocess.check_output(["whence", "cgnscheck"], stderr=subprocess.STDOUT)
+            mllp = subprocess.check_output(["whence", "cgnscheck"], stderr=subprocess.STDOUT).decode('utf-8')
         except:
             mllp = None
     if (mllp is not None):
