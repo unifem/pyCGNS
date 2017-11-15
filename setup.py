@@ -100,8 +100,8 @@ for name, val in modules.items():
 
 # Remove modules from command-line arguments
 pr1 = argparse.ArgumentParser()
-for name in modules:
-    pr1.add_argument("--" + name, type=str2bool)
+for name, val in modules.items():
+    pr1.add_argument("--" + name, type=str2bool, default=val)
 
 args1, unknown = pr1.parse_known_args()
 sys.argv = sys.argv[:1] + unknown
